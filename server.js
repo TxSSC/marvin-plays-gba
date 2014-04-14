@@ -1,8 +1,9 @@
 // Node server for receiving hubot commands and forwarding them to a client
 
 var http = require('http'),
+    path = require('path'),
     fs = require('fs'),
-    _port = process.env.GBA_PORT || 1337,
+    _port = process.env.GBA_PORT || 80,
     _html = null,
     _retry = null,
     _client = null;
@@ -13,6 +14,26 @@ fs.readFile('./index.html', function (err, html) {
   }
   _html = html;
 });
+
+function contentType(ext) {
+  var ct;
+
+  switch (ext) {
+    case '.html':
+      ct = 'text/html';
+      break;
+    case '.css':
+      ct = 'text/css';
+      break;
+    case '.js':
+      ct = 'text/javascript';
+      break;
+    default:
+      ct = 'text/plain';
+      break;
+  }
+  return { 'Content-Type': ct };
+}
 
 // Start the keep alive connection with the client
 function startBeat() {
@@ -88,10 +109,39 @@ var server = http.createServer(function (req, res) {
         sendData('push', dataType+' '+data);
       }
     });
+
+// Return static pages and files
   } else {
-    res.writeHeader(200, {"Content-Type": "text/html"});
-    res.write(_html);
-    res.end();
+    var filePath = (req.url == '/' ? 'index.html' : '.' + req.url),
+        fileExt = path.extname(filePath);
+
+    fs.exists(filePath, function (f) {
+      if (f) {
+        // Serve index.html
+        if (filePath == 'index') {
+          res.writeHeader(200, {'Content-Type': 'texl/html'});
+          res.end(_html);
+        }
+        // Serve any other file
+        else {
+          fs.readFile(filePath, function (err, content) {
+            if (err) {
+              res.writeHead(500);
+              res.end();
+            } else {
+              res.writeHead(200, contentType(fileExt));
+              res.end(content);
+            }
+          });
+        }
+      } else {
+        res.writeHead(404);
+        res.end();
+      }
+    });
+
+    // res.writeHeader(200, contentType(fileExt));
+    // res.end(_html);
   }
 });
 

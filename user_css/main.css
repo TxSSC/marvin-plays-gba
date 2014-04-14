@@ -38,6 +38,7 @@ div#control_panel {
     background-color: rgb(220, 220, 220);
     padding: 5px 3px;
     overflow: hidden;
+    opacity: 0;
     white-space: nowrap;
 }
 div#control_panel:hover {
@@ -68,9 +69,9 @@ div#main canvas {
 .dynarec {
     display: none;
 }
-canvas {
+/*canvas {
     cursor: none;
-}
+}*/
 span#tempMessage {
     color: red;
     bottom: 0px;
