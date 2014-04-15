@@ -53,13 +53,14 @@ window.onload = function () {
         'SELECT':16
       };
       // console.log('commands: '+commands[0]+' '+commands[1]);
-      for (var i=0; i<commands[1]; i++) {
+      var delay = 1200;
+      for (var i=commands[1]; i>=0; --i) {
         setTimeout( function () {
             keyDown(null, keys[commands[0]]);
-        }, 200*i);
+        }, delay*i);
         setTimeout( function () {
             keyUp(null, keys[commands[0]]);
-        }, 200*(i+1));
+        }, delay*i+delay/2);
       }
     });
 
