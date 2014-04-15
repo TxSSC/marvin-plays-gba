@@ -3,12 +3,12 @@
 var http = require('http'),
     path = require('path'),
     fs = require('fs'),
-    _port = process.env.GBA_PORT || 80,
     _html = null,
     _retry = null,
-    _client = null;
+    _client = null,
+    PORT = process.env.GBA_PORT || 3000;
 
-fs.readFile('./index.html', function (err, html) {
+fs.readFile(__dirname + '/index.html', function (err, html) {
   if (err) {
     throw err;
   }
@@ -145,5 +145,5 @@ var server = http.createServer(function (req, res) {
   }
 });
 
-server.listen(_port);
-console.log('Server running on port: '+_port);
+server.listen(PORT);
+console.log('Server running on port: ' + PORT);
