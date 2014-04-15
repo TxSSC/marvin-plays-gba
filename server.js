@@ -119,7 +119,7 @@ var server = http.createServer(function (req, res) {
       if (f) {
         // Serve index.html
         if (filePath == 'index') {
-          res.writeHeader(200, {'Content-Type': 'texl/html'});
+          res.writeHeader(200, {'Content-Type': 'text/html'});
           res.end(_html);
         }
         // Serve any other file
