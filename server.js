@@ -110,16 +110,38 @@ var server = http.createServer(function (req, res) {
       }
     });
 
-  // Return static pages and files
+// Return static pages and files
   } else {
-    if(req.url.match(/\/?|\/index(?:\.html)?/))  {
-      // Serve index.html
-      res.writeHead(200, {'Content-Type': 'text/html'});
-      res.end(_html);
-    } else {
-      res.writeHead(404);
-      res.end();
-    }
+    var filePath = (req.url == '/' ? 'index.html' : '.' + req.url),
+        fileExt = path.extname(filePath);
+
+    fs.exists(filePath, function (f) {
+      if (f) {
+        // Serve index.html
+        if (filePath == 'index') {
+          res.writeHeader(200, {'Content-Type': 'text/html'});
+          res.end(_html);
+        }
+        // Serve any other file
+        else {
+          fs.readFile(filePath, function (err, content) {
+            if (err) {
+              res.writeHead(500);
+              res.end();
+            } else {
+              res.writeHead(200, contentType(fileExt));
+              res.end(content);
+            }
+          });
+        }
+      } else {
+        res.writeHead(404);
+        res.end();
+      }
+    });
+
+    // res.writeHeader(200, contentType(fileExt));
+    // res.end(_html);
   }
 });
 
