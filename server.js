@@ -3,12 +3,12 @@
 var http = require('http'),
     path = require('path'),
     fs = require('fs'),
-    _port = process.env.GBA_PORT || 80,
     _html = null,
     _retry = null,
-    _client = null;
+    _client = null,
+    PORT = process.env.GBA_PORT || 3000;
 
-fs.readFile('./index.html', function (err, html) {
+fs.readFile(__dirname + '/index.html', function (err, html) {
   if (err) {
     throw err;
   }
@@ -110,16 +110,16 @@ var server = http.createServer(function (req, res) {
       }
     });
 
-// Return static pages and files
+  // Return static pages and files
   } else {
-    var filePath = (req.url == '/' ? 'index.html' : '.' + req.url),
+    var filePath = __dirname + '/' + (req.url === '/' ? 'index.html' : req.url),
         fileExt = path.extname(filePath);
 
     fs.exists(filePath, function (f) {
       if (f) {
         // Serve index.html
         if (filePath == 'index') {
-          res.writeHeader(200, {'Content-Type': 'texl/html'});
+          res.writeHead(200, {'Content-Type': 'text/html'});
           res.end(_html);
         }
         // Serve any other file
@@ -135,15 +135,12 @@ var server = http.createServer(function (req, res) {
           });
         }
       } else {
-        res.writeHead(404);
-        res.end();
+        res.writeHead(404, { 'Content-Type': 'text/plain' });
+        res.end("Not found");
       }
     });
-
-    // res.writeHeader(200, contentType(fileExt));
-    // res.end(_html);
   }
 });
 
-server.listen(_port);
-console.log('Server running on port: '+_port);
+server.listen(PORT);
+console.log('Server running on port: ' + PORT);
