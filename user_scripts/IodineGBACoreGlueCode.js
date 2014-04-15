@@ -1,4 +1,3 @@
-"use strict";
 /*
  * This file is part of IodineGBA
  *
@@ -20,7 +19,7 @@ var Blitter = null;
 var Mixer = null;
 var MixerInput = null;
 var timerID = null;
-var server = new EventSource("http://127.0.0.1:1337/events");
+var server = new EventSource("/events");
 
 window.onload = function () {
     server.addEventListener('load', function (data) {
