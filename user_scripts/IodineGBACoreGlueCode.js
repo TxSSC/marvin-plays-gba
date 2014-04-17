@@ -20,7 +20,7 @@ var Mixer = null;
 var MixerInput = null;
 var timerID = null;
 var server = new EventSource("/events");
-var commandArray = [];
+var commandQueue = [];
 
 /**
  * Process queue if there is anything, otherwise return
@@ -29,9 +29,9 @@ var commandArray = [];
  */
 
 function processQueue() {
-  if(commandArray.length === 0) return;
+  if(commandQueue.length === 0) return;
 
-  var keyCode = commandArray.shift();
+  var keyCode = commandQueue.shift();
   keyDown(null, keyCode);
   setTimeout(keyUp.bind(null, null, keyCode), 400);
 }
