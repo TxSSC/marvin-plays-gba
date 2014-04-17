@@ -24,7 +24,7 @@ var commandArray = new Array(),
     lastCommand = null;
 
 function doCommand () {
-  var command = commandArray.shift();
+  var command = commandArray.unshift();
 
   if ( command != undefined ) {
     keyDown( null, command );
