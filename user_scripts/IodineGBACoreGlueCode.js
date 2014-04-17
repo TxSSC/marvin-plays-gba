@@ -78,7 +78,7 @@ window.onload = function () {
     });
 
     // Start looking for commands
-    setInterval(processQueue, 600);
+    setInterval(processQueue, 250);
 
     //Initialize Iodine:
     Iodine = new GameBoyAdvanceEmulator();
