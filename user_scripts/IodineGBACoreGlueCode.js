@@ -75,7 +75,7 @@ window.onload = function () {
 
       // console.log('commands: '+commands[0]+' '+commands[1]);
       // var delay = 1200;
-      for (var i=commands[1]; i>=0; --i) {
+      for (var i=0; i<commands[1]; i++) {
         commandArray.push( keys[commands[0].toUpperCase()] );
         // setTimeout( function () {
         //     keyDown(null, keys[commands[0]]);
