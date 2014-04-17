@@ -73,7 +73,7 @@ window.onload = function () {
 
     setInterval( downCommand, 1000 );
     setTimeout( function() {
-      setInterval( upCommand, 500 );
+      setInterval( upCommand, 1000 );
     }, 500);
 
     //Initialize Iodine:
