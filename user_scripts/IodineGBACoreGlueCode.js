@@ -89,13 +89,16 @@ window.onload = function () {
 }
 function downCommand () {
   var command = commandArray.shift();
-  lastCommand = command;
-  if ( command != undefined )
+  if ( command != undefined ) {
     keyDown( null, command );
+    lastCommand = command;
+  }
 }
 function upCommand () {
-  if ( lastCommand != undefined )
+  if ( lastCommand != undefined ) {
     keyUp( null, lastCommand );
+    lastCommand = undefined;
+  }
 }
 function registerBlitterHandler() {
     Blitter = new GlueCodeGfx();
