@@ -23,19 +23,17 @@ var server = new EventSource("/events");
 var commandArray = new Array(),
     lastCommand = null;
 
-function doCommand () {
+function downCommand () {
   var command = commandArray.shift();
-
   if ( command != undefined ) {
     keyDown( null, command );
     lastCommand = command;
-
-    setTimeout( function() {
-      if ( lastCommand != undefined ) {
-        keyUp( null, lastCommand );
-        lastCommand = undefined;
-      }
-    }, 250);
+  }
+}
+function upCommand () {
+  if ( lastCommand != undefined ) {
+    keyUp( null, lastCommand );
+    lastCommand = undefined;
   }
 }
 window.onload = function () {
@@ -53,10 +51,7 @@ window.onload = function () {
     };
 
     server.addEventListener('load', function (data) {
-      console.log('Received load request: '+data.data+'.gba');
-      // document.body.innerHTML += '<h2>'+str+'\n</h2>';
-      // document.getElementById('bios_load').value = '../../roms/gba.bin';
-      // document.getElementById('bios_load').dispatchEvent('change');
+      // console.log('Received load request: '+data.data+'.gba');
       fileLoadBIOS(true);
       fileLoadROM(true, data.data+'.gba');
 
@@ -97,7 +92,10 @@ window.onload = function () {
     //Hook the GUI controls.
     registerGUIEvents();
 
-    setInterval( doCommand, 1000 );
+    setInterval( downCommand, 1000 );
+    setTimeout( function() {
+      setInterval( upCommand, 1000 );
+    }, 250);
 }
 function registerBlitterHandler() {
     Blitter = new GlueCodeGfx();
