@@ -25,17 +25,18 @@ var commandArray = new Array(),
 
 function doCommand () {
   var command = commandArray.shift();
+
   if ( command != undefined ) {
     keyDown( null, command );
     lastCommand = command;
-  }
 
-  setTimeout( function() {
-    if ( lastCommand != undefined ) {
-      keyUp( null, lastCommand );
-      lastCommand = undefined;
-    }
-  }, 250);
+    setTimeout( function() {
+      if ( lastCommand != undefined ) {
+        keyUp( null, lastCommand );
+        lastCommand = undefined;
+      }
+    }, 250);
+  }
 }
 window.onload = function () {
     var keys = {
@@ -69,14 +70,13 @@ window.onload = function () {
     server.addEventListener('push', function (data) {
       // console.log('Received push request: '+data.data);
       var commands = data.data.split(' ');
-      commands[0] = commands[0].toUpperCase();
       if ( commands[1] > 20 )
         commands[1] = 20;
 
       // console.log('commands: '+commands[0]+' '+commands[1]);
       // var delay = 1200;
       for (var i=commands[1]; i>=0; --i) {
-        commandArray.push( keys[commands[0]] );
+        commandArray.push( keys[commands[0].toUpperCase()] );
         // setTimeout( function () {
         //     keyDown(null, keys[commands[0]]);
         // }, delay*i);
