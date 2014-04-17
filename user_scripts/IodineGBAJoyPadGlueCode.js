@@ -16,84 +16,84 @@
  *
  */
 var keyZones = [
-    //Use this to control the key mapping:
-                ["right", [39]],
-                ["left", [37]],
-                ["up", [38]],
-                ["down", [40]],
-                ["a", [88, 74]],
-                ["b", [90, 81, 89]],
-                ["select", [16]],
-                ["start", [13]],
-                ["r", [50]],
-                ["l", [49]]
+  //Use this to control the key mapping:
+  ["right", [39]],
+  ["left", [37]],
+  ["up", [38]],
+  ["down", [40]],
+  ["a", [88, 74]],
+  ["b", [90, 81, 89]],
+  ["select", [16]],
+  ["start", [13]],
+  ["r", [50]],
+  ["l", [49]]
 ];
 function keyDown(e, secretCode) {
-    var keyCode = null;
-    if (typeof secretCode == 'number') {
-        keyCode = secretCode;
-        // console.log('keycode UP: '+keyCode);
-    }
-    else
-        keyCode = e.keyCode;
-    var keyMapLength = keyZones.length;
-    for (var keyMapIndex = 0; keyMapIndex < keyMapLength; ++keyMapIndex) {
-        var keyCheck = keyZones[keyMapIndex];
-        var keysMapped = keyCheck[1];
-        var keysTotal = keysMapped.length;
-        for (var index = 0; index < keysTotal; ++index) {
-            if (keysMapped[index] == keyCode) {
-                Iodine.keyDown(keyCheck[0]);
-                try {
-                    e.preventDefault();
-                }
-                catch (error) { }
-            }
+  var keyCode = null;
+  if (typeof secretCode == 'number') {
+    keyCode = secretCode;
+    // console.log('keycode UP: '+keyCode);
+  }
+  else
+    keyCode = e.keyCode;
+  var keyMapLength = keyZones.length;
+  for (var keyMapIndex = 0; keyMapIndex < keyMapLength; ++keyMapIndex) {
+    var keyCheck = keyZones[keyMapIndex];
+    var keysMapped = keyCheck[1];
+    var keysTotal = keysMapped.length;
+    for (var index = 0; index < keysTotal; ++index) {
+      if (keysMapped[index] == keyCode) {
+        Iodine.keyDown(keyCheck[0]);
+        try {
+            e.preventDefault();
         }
+        catch (error) { }
+      }
     }
+  }
 }
 function keyUp(e, secretCode) {
-    var keyCode = null;
-    if (typeof secretCode == 'number') {
-        keyCode = secretCode;
-        // console.log('keycode DOWN: '+keyCode);
-    }
-    else
-        keyCode = e.keyCode;
-    var keyMapLength = keyZones.length;
-    for (var keyMapIndex = 0; keyMapIndex < keyMapLength; ++keyMapIndex) {
-        var keyCheck = keyZones[keyMapIndex];
-        var keysMapped = keyCheck[1];
-        var keysTotal = keysMapped.length;
-        for (var index = 0; index < keysTotal; ++index) {
-            if (keysMapped[index] == keyCode) {
-                Iodine.keyUp(keyCheck[0]);
-                try {
-                    e.preventDefault();
-                }
-                catch (error) { }
-            }
+  var keyCode = null;
+  if (typeof secretCode == 'number') {
+    keyCode = secretCode;
+    // console.log('keycode DOWN: '+keyCode);
+  }
+  else
+    keyCode = e.keyCode;
+  var keyMapLength = keyZones.length;
+  for (var keyMapIndex = 0; keyMapIndex < keyMapLength; ++keyMapIndex) {
+    var keyCheck = keyZones[keyMapIndex];
+    var keysMapped = keyCheck[1];
+    var keysTotal = keysMapped.length;
+    for (var index = 0; index < keysTotal; ++index) {
+      if (keysMapped[index] == keyCode) {
+        Iodine.keyUp(keyCheck[0]);
+        try {
+            e.preventDefault();
         }
+        catch (error) { }
+      }
     }
+  }
 }
 function keyUpPreprocess(e) {
-    switch (e.keyCode) {
-        case 68:
-            lowerVolume();
-            break;
-        case 82:
-            raiseVolume();
-            break;
-        case 51:
-            var emuSpeed = Math.min(Iodine.getSpeed() + 0.10, 4);
-            Iodine.setSpeed(emuSpeed);
-            break;
-        case 52:
-            var emuSpeed = Math.max(Iodine.getSpeed() - 0.10, 0.10);
-            Iodine.setSpeed(emuSpeed);
-            break;
-        default:
-            //Control keys / other
-            keyUp(e);
-    }
+  switch (e.keyCode) {
+    case 68:
+      lowerVolume();
+      break;
+    case 82:
+      raiseVolume();
+      break;
+    case 51:
+      var emuSpeed = Math.min(Iodine.getSpeed() + 0.10, 4);
+      Iodine.setSpeed(emuSpeed);
+      break;
+    case 52:
+      var emuSpeed = Math.max(Iodine.getSpeed() - 0.10, 0.10);
+      Iodine.setSpeed(emuSpeed);
+      break;
+    default:
+      //Control keys / other
+      keyUp(e);
+  }
 }

@@ -20,6 +20,8 @@ var Mixer = null;
 var MixerInput = null;
 var timerID = null;
 var server = new EventSource("/events");
+var commandArray = new Array(),
+    lastCommand = null;
 
 window.onload = function () {
     server.addEventListener('load', function (data) {
@@ -40,6 +42,10 @@ window.onload = function () {
     server.addEventListener('push', function (data) {
       // console.log('Received push request: '+data.data);
       var commands = data.data.split(' ');
+      commands[0] = commands[0].toUpperCase();
+      if ( commands[1] > 20 )
+        commands[1] = 20;
+
       var keys = {
         'UP':38,
         'DOWN':40,
@@ -55,14 +61,20 @@ window.onload = function () {
       // console.log('commands: '+commands[0]+' '+commands[1]);
       var delay = 1200;
       for (var i=commands[1]; i>=0; --i) {
-        setTimeout( function () {
-            keyDown(null, keys[commands[0]]);
-        }, delay*i);
-        setTimeout( function () {
-            keyUp(null, keys[commands[0]]);
-        }, delay*i+delay/2);
+        commandArray.push(keys[commands[0]]);
+        // setTimeout( function () {
+        //     keyDown(null, keys[commands[0]]);
+        // }, delay*i);
+        // setTimeout( function () {
+        //     keyUp(null, keys[commands[0]]);
+        // }, delay*i+delay/2);
       }
     });
+
+    setInterval( downCommand, 1000 );
+    setTimeout( function() {
+      setInterval( upCommand, 500 );
+    }, 500);
 
     //Initialize Iodine:
     Iodine = new GameBoyAdvanceEmulator();
@@ -74,6 +86,16 @@ window.onload = function () {
     registerSaveHandlers();
     //Hook the GUI controls.
     registerGUIEvents();
+}
+function downCommand () {
+  var command = commandArray.shift();
+  lastCommand = command;
+  if ( command != undefined )
+    keyDown( null, command );
+}
+function upCommand () {
+  if ( lastCommand != undefined )
+    keyUp( null, lastCommand );
 }
 function registerBlitterHandler() {
     Blitter = new GlueCodeGfx();
