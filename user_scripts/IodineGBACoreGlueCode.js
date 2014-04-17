@@ -20,22 +20,22 @@ var Mixer = null;
 var MixerInput = null;
 var timerID = null;
 var server = new EventSource("/events");
-var commandArray = new Array(),
-    lastCommand = null;
+var commandArray = [];
 
-function downCommand () {
-  var command = commandArray.shift();
-  if ( command != undefined ) {
-    keyDown( null, command );
-    lastCommand = command;
-  }
+/**
+ * Process queue if there is anything, otherwise return
+ *  - Ran every second
+ *  - emulates a keypress for 400ms
+ */
+
+function processQueue() {
+  if(commandArray.length === 0) return;
+
+  var keyCode = commandArray.shift();
+  keyDown(null, keyCode);
+  setTimeout(keyUp.bind(null, null, keyCode), 400);
 }
-function upCommand () {
-  if ( lastCommand != undefined ) {
-    keyUp( null, lastCommand );
-    lastCommand = undefined;
-  }
-}
+
 window.onload = function () {
     var keys = {
       'UP':38,
@@ -63,23 +63,20 @@ window.onload = function () {
     });
 
     server.addEventListener('push', function (data) {
-      // console.log('Received push request: '+data.data);
-      var commands = data.data.split(' ');
-      if ( commands[1] > 20 )
-        commands[1] = 20;
+      var commands = data.data.split(' '),
+          num = parseInt(commands[1], 10);
 
-      // console.log('commands: '+commands[0]+' '+commands[1]);
-      // var delay = 1200;
-      for (var i=0; i<commands[1]; i++) {
-        commandArray.push( keys[commands[0].toUpperCase()] );
-        // setTimeout( function () {
-        //     keyDown(null, keys[commands[0]]);
-        // }, delay*i);
-        // setTimeout( function () {
-        //     keyUp(null, keys[commands[0]]);
-        // }, delay*i+delay/2);
+      if(num > 20) {
+        num = 20;
+      }
+
+      for(var i = 0; i < num; i++) {
+        commandQueue.push(keys[commands[0].toUpperCase()]);
       }
     });
+
+    // Start looking for commands
+    setInterval(processQueue, 1000);
 
     //Initialize Iodine:
     Iodine = new GameBoyAdvanceEmulator();
@@ -91,12 +88,8 @@ window.onload = function () {
     registerSaveHandlers();
     //Hook the GUI controls.
     registerGUIEvents();
+};
 
-    setInterval( downCommand, 1000 );
-    setTimeout( function() {
-      setInterval( upCommand, 1000 );
-    }, 250);
-}
 function registerBlitterHandler() {
     Blitter = new GlueCodeGfx();
     Blitter.attachCanvas(document.getElementById("emulator_target"));
