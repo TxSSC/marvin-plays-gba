@@ -23,6 +23,19 @@ var server = new EventSource("/events");
 var commandArray = new Array(),
     lastCommand = null;
 
+function downCommand () {
+  var command = commandArray.shift();
+  if ( command != undefined ) {
+    keyDown( null, command );
+    lastCommand = command;
+  }
+}
+function upCommand () {
+  if ( lastCommand != undefined ) {
+    keyUp( null, lastCommand );
+    lastCommand = undefined;
+  }
+}
 window.onload = function () {
     server.addEventListener('load', function (data) {
       console.log('Received load request: '+data.data+'.gba');
@@ -71,11 +84,6 @@ window.onload = function () {
       }
     });
 
-    setInterval( downCommand, 1000 );
-    setTimeout( function() {
-      setInterval( upCommand, 1000 );
-    }, 500);
-
     //Initialize Iodine:
     Iodine = new GameBoyAdvanceEmulator();
     //Initialize the graphics:
@@ -86,19 +94,11 @@ window.onload = function () {
     registerSaveHandlers();
     //Hook the GUI controls.
     registerGUIEvents();
-}
-function downCommand () {
-  var command = commandArray.shift();
-  if ( command != undefined ) {
-    keyDown( null, command );
-    lastCommand = command;
-  }
-}
-function upCommand () {
-  if ( lastCommand != undefined ) {
-    keyUp( null, lastCommand );
-    lastCommand = undefined;
-  }
+
+    setInterval( downCommand, 1000 );
+    setTimeout( function() {
+      setInterval( upCommand, 1000 );
+    }, 250);
 }
 function registerBlitterHandler() {
     Blitter = new GlueCodeGfx();
