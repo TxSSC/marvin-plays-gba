@@ -33,7 +33,7 @@ function processQueue() {
 
   var keyCode = commandQueue.shift();
   keyDown(null, keyCode);
-  setTimeout(keyUp.bind(null, null, keyCode), 400);
+  setTimeout(keyUp.bind(null, null, keyCode), 200);
 }
 
 window.onload = function () {
