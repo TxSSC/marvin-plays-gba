@@ -71,7 +71,9 @@ window.onload = function () {
       }
 
       for(var i = 0; i < num; i++) {
-        commandQueue.push(keys[commands[0].toUpperCase()]);
+        if(keys[commands[0].toUpperCase()]) {
+          commandQueue.push(keys[commands[0].toUpperCase()]);
+        }
       }
     });
 
