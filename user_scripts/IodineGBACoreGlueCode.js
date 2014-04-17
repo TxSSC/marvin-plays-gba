@@ -23,20 +23,34 @@ var server = new EventSource("/events");
 var commandArray = new Array(),
     lastCommand = null;
 
-function downCommand () {
+function doCommand () {
   var command = commandArray.shift();
   if ( command != undefined ) {
     keyDown( null, command );
     lastCommand = command;
   }
-}
-function upCommand () {
-  if ( lastCommand != undefined ) {
-    keyUp( null, lastCommand );
-    lastCommand = undefined;
-  }
+
+  setTimeout( function() {
+    if ( lastCommand != undefined ) {
+      keyUp( null, lastCommand );
+      lastCommand = undefined;
+    }
+  }, 250);
 }
 window.onload = function () {
+    var keys = {
+      'UP':38,
+      'DOWN':40,
+      'LEFT':37,
+      'RIGHT':39,
+      'A':88,
+      'B':90,
+      'L':49,
+      'R':50,
+      'START':13,
+      'SELECT':16
+    };
+
     server.addEventListener('load', function (data) {
       console.log('Received load request: '+data.data+'.gba');
       // document.body.innerHTML += '<h2>'+str+'\n</h2>';
@@ -59,22 +73,10 @@ window.onload = function () {
       if ( commands[1] > 20 )
         commands[1] = 20;
 
-      var keys = {
-        'UP':38,
-        'DOWN':40,
-        'LEFT':37,
-        'RIGHT':39,
-        'A':88,
-        'B':90,
-        'L':49,
-        'R':50,
-        'START':13,
-        'SELECT':16
-      };
       // console.log('commands: '+commands[0]+' '+commands[1]);
-      var delay = 1200;
+      // var delay = 1200;
       for (var i=commands[1]; i>=0; --i) {
-        commandArray.push(keys[commands[0]]);
+        commandArray.push( keys[commands[0]] );
         // setTimeout( function () {
         //     keyDown(null, keys[commands[0]]);
         // }, delay*i);
@@ -95,10 +97,7 @@ window.onload = function () {
     //Hook the GUI controls.
     registerGUIEvents();
 
-    setInterval( downCommand, 1000 );
-    setTimeout( function() {
-      setInterval( upCommand, 1000 );
-    }, 250);
+    setInterval( doCommand, 1000 );
 }
 function registerBlitterHandler() {
     Blitter = new GlueCodeGfx();
