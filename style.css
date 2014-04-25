@@ -1,0 +1,15 @@
+html body {
+  font-size: 62.5%;
+  font-weight: 400 !important;
+  font-smooth: never !important;
+  font-family: 'Inconsolata' !important;
+  -webkit-font-smoothing: none !important;
+  text-shadow: 0px 0px 1px rgba(0,0,0,0) !important;
+}
+
+body h1 {
+  font-size: 4.4em;
+  margin-left: auto;
+  margin-right: auto;
+  width: 7em;
+}
